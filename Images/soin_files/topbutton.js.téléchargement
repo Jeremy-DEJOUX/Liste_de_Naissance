@@ -1,0 +1,21 @@
+var topbutton;
+
+$(function() {
+  topbutton = function(time) {
+    $('body').prepend('<a href="" class="top_link" title="Revenir en haut de page"></a>');
+
+    $('.top_link').click(function(){
+      goToByScroll('body');
+      return false;
+    });
+    
+    $(window).scroll(function() {
+      posScroll = $(document).scrollTop();
+      if(posScroll >= time) {
+        $('.top_link').fadeIn(600);
+      } else {
+        $('.top_link').fadeOut(600);
+      }
+    });
+  };
+});

@@ -1,0 +1,884 @@
+/**
+ * Fonction permettant de redéfinir une valeur déja existante dans le dataLayer
+ * @param param
+ * @param value
+ */
+function redefineDataLayer(param,value) {
+    for (id in dataLayer) {
+        if (param in dataLayer[id]) {
+            dataLayer[id][param] = value;
+        }
+    }
+}
+
+/**
+ * Fonction permettant d'envoyer des customs events
+ * @param data
+ */
+function customEvent(data) {
+    dataLayer.push({
+       event: data.name,
+       eventCategory: data.category,
+       eventAction: data.action,
+       eventLibelle: data.libelle,
+       eventValue: data.value
+    });
+}
+
+/**
+ * Fonction permettant d'envoyer les UserDimensions
+ * @param {Object} data
+ * @param {Number} data.user_id
+ * @param {string} data.user_logged loggé ou anonyme
+ * @param {boolean} data.user_email_optin true ou false
+ * @param {string} data.user_status Customer ou Proscpect
+ */
+function dataLayerUserDimensions(data) {
+
+    dataLayer.push({
+        event: 'UserDimensions',
+        'user_id': data.user_id,
+        'user_logged': data.user_logged,
+        'user_email_optin': data.user_email_optin,
+        'user_status': data.user_status
+    });
+}
+
+/**
+ * Fonction permettant d'envoyer les ContentDimensions
+ * @param data {Object}
+ * @param data.pageCategory {string}
+ * @param data.page_cat1 {string}
+ * @param data.page_cat2 {string}
+ * @param data.page_cat3 {string}
+ * @param data.page_env {string} prod ou staging
+ * @param data.page_error {string}
+ */
+function dataLayerContentDimensions(data) {
+
+    var dataFormated = {
+        'page_env': data.page_env,
+        'page_error': data.page_error
+    };
+
+    if (data.pageCategory != undefined) {
+        dataFormated.pageCategory = data.pageCategory;
+        dataFormated.pageCategory_dim = data.pageCategory;
+    }
+
+    if (data.page_cat1 != undefined) {
+        dataFormated.page_cat1 = data.page_cat1;
+    }
+
+    if (data.page_cat2 != undefined) {
+        dataFormated.page_cat2 = data.page_cat2;
+    }
+
+    if (data.page_cat3 != undefined) {
+        dataFormated.page_cat3 = data.page_cat3;
+    }
+
+    dataFormated.page_cat4 =  ((dataFormated.page_cat1 != null)?  dataFormated.page_cat1 : '') + ((dataFormated.page_cat2 != null)? " > " + dataFormated.page_cat2 : '') + ((dataFormated.page_cat3 != null)? " > " + dataFormated.page_cat3 : '');
+
+
+    dataLayer.push(dataFormated);
+}
+
+/**
+ * Fonction permettant d'envoyer les SearchDimensions
+ * @param data {Object}
+ * @param data.search_results_number {Number}
+ * @param data.search_keywords {String}
+ * @param data.search_page_number {Number}
+ */
+function dataLayerSearchDimensions(data) {
+
+    dataLayer.push({
+        event: 'SearchDimensions',
+        'search_results_number': data.search_results_number,
+        'search_keywords': data.search_keywords,
+        'search_page_number': data.search_page_number
+    });
+}
+
+
+/**
+ * Fonction permettant d'envoyer les PromotionsDimensions
+ * @param {Object[]} promotions
+ * @param {String} promotions[].id
+ * @param {String} promotions[].name
+ * @param {String} promotions[].creative,
+ * @param {Number} promotions[].position
+ */
+function dataLayerPromotionsDimensions(promotions) {
+
+    dataLayer.push({
+        event: 'PromotionsDimensions',
+        'ecommerce': {
+            'promoView': {
+                'promotions': promotions
+            }
+        }
+    });
+}
+
+/**
+ * Fonction permeettant d'envoyer les ProductDimensions
+ * @param datas {Array}
+ * @param datas[] {Object}
+ * @param datas[].disponibility {String}
+ * @param datas[].delivery_time {String}
+ * @param datas[].product_age {String}
+ * @param datas[].brand_type {String}
+ * @param datas[].stock_type {String}
+ * @param datas[].product_rating {String}
+ * @param datas[].number_product_rate {String}
+ * @param datas[].competition_position {String}
+ * @param datas[].product_margin {String}
+ * @param datas[].product_color {String}
+ * @param datas[].id {String}
+ * @param datas[].name {String}
+ * @param datas[].category {String}
+ * @param datas[].quantity {Number}
+ * @param datas[].brand {String}
+ * @param datas[].variant {String}
+ * @param datas[].list {String}
+ * @param datas[].position {String}
+ * @param datas[].price {String}
+ */
+function dataLayerProductDimensions(datas) {
+
+        datas = _.chunk(datas, 20);
+
+        datas.forEach(function (data) {
+
+            dataLayer.push({
+                event: 'ProductDimensions',
+                'ecommerce': {
+                    'currencyCode': 'EUR',
+                    'impressions': data
+                }
+            });
+
+        });
+
+}
+
+// function dataLayerProductsTarget2Sell(datas) {
+//     datas = _.chunk(datas, 20);
+//
+//     datas.forEach(function (data) {
+//         dataLayer.push({
+//             target2sell_products: data
+//         });
+//     });
+// }
+
+/**
+ * Fonction ce déclanchant lors du click d'un produit
+ * @param data {Object}
+ * @param data.disponibility {String}
+ * @param data.delivery_time {String}
+ * @param data.product_age {String}
+ * @param data.brand_type {String}
+ * @param data.stock_type {String}
+ * @param data.product_rating {String}
+ * @param data.number_product_rate {String}
+ * @param data.competition_position {String}
+ * @param data.product_margin {String}
+ * @param data.product_color {String}
+ * @param data.id {String}
+ * @param data.name {String}
+ * @param data.category {String}
+ * @param data.brand {String}
+ * @param data.variant {String}
+ * @param data.list {String}
+ * @param data.position {String}
+ * @param data.price {String}
+ */
+function dataLayerClickProduct(data) {
+
+    dataLayer.push({
+        'event': 'productClick',
+        'ecommerce': {
+            'click': {
+                'actionField': {'list': data.list},
+                'products': [{
+                    'id': data.id,
+                    'name': data.name,
+                    'category': data.category,
+                    'brand': data.brand,
+                    'variant': data.variant,
+                    'price': data.price,
+                    'position': data.position,
+                    'dimension4': data.disponibility,
+                    'dimension5': data.delivery_time,
+                    'dimension6': data.product_age,
+                    'dimension7': data.brand_type,
+                    'dimension8': data.stock_type,
+                    'dimension9': data.product_rating,
+                    'dimension10': data.number_product_rate,
+                    'dimension11': data.competition_position,
+                    'dimension12': data.product_margin,
+                    'dimension13': data.product_color,
+                }]
+            }
+        },
+    });
+}
+
+/**
+ * Fonction declancher lors du click d'une promotion
+ * @param {Object} data
+ * @param {String} data.id
+ * @param {String} data.name
+ * @param {String} data.creative,
+ * @param {Number} data.position
+ */
+function dataLayerClickPromotion(data) {
+
+    dataLayer.push({
+        'event': 'promotionClick',
+        'ecommerce': {
+            'promoClick': {
+                'promotions': [
+                    {
+                        'id': data.id,
+                        'name': data.name,
+                        'creative': data.creative,
+                        'position': data.position
+                    }]
+            },
+        }
+    });
+
+}
+
+/**
+ * Fonction permettant d'envoyer le dataLayerProductDetail
+ * @param {Object} data
+ * @param {String} data.id
+ * @param {String} data.name
+ * @param {String} data.category
+ * @param {String} data.brand
+ * @param {String} data.variant
+ * @param {String} data.price
+ * @param {String} data.stock
+ * @param {String} data.delivery_time
+ * @param {String} data.product_age
+ * @param {String} data.brand_type
+ * @param {String} data.stock_type
+ * @param {String} data.product_rating
+ * @param {String} data.number_product_rate
+ * @param {String} data.competition_position
+ * @param {String} data.product_margin
+ * @param {String} data.product_color
+ */
+function dataLayerProductDetail(data) {
+
+    dataLayer.push({
+        'event': 'productView',
+        'productViewName': data.name,
+        'ecommerce': {
+            'detail': {
+                'products': [{
+                    'id': data.id,
+                    'name': data.name,
+                    'category': data.category,
+                    'brand': data.brand,
+                    'variant': data.variant,
+                    'price': data.price,
+                    'dimension4': data.stock,
+                    'dimension5': data.delivery_time,
+                    'dimension6': data.product_age,
+                    'dimension7': data.brand_type,
+                    'dimension8': data.stock_type,
+                    'dimension9': data.product_rating,
+                    'dimension10': data.number_product_rate,
+                    'dimension11': data.competition_position,
+                    'dimension12': data.product_margin,
+                    'dimension13': data.product_color,
+                }]
+            }
+        }
+    });
+
+}
+
+/**
+ * Fonction permettant d'envoyer le dataLayerAddToCart
+ * @param {Object} data
+ */
+function dataLayerAddToCart(data) {
+
+    dataLayer.push({
+        'event': 'addToCart',
+        'NameAddToCart': data.name,
+        'ecommerce': {
+            'add': {
+                'products': [{
+                    'id': data.id,
+                    'name': data.name,
+                    'category': data.category,
+                    'brand': data.brand,
+                    'variant': data.variant,
+                    'price': data.price,
+                    'quantity': data.quantity,
+                    'dimension4': data.stock,
+                    'dimension5': data.delivery_time,
+                    'dimension6': data.product_age,
+                    'dimension7': data.brand_type,
+                    'dimension8': data.stock_type,
+                    'dimension9': data.product_rating,
+                    'dimension10': data.number_product_rate,
+                    'dimension11': data.competition_position,
+                    'dimension12': data.product_margin,
+                    'dimension13': data.product_color,
+                }]
+            }
+        }
+    });
+}
+
+/**
+ * Fonction permettant d'envoyer le dataLayerRemoveFromCart
+ * @param {Object} data
+ */
+function dataLayerRemoveFromCart(data) {
+
+    dataLayer.push({
+        'event': 'removeFromCart',
+        'NameRemoveFromCart': data.name,
+        'ecommerce': {
+            'remove': {
+                'products': [{
+                    'id': data.id,
+                    'name': data.name,
+                    'category': data.category,
+                    'brand': data.brand,
+                    'variant': data.variant,
+                    'price': data.price,
+                    'quantity': data.quantity,
+                    'dimension4': data.stock,
+                    'dimension5': data.delivery_time,
+                    'dimension6': data.product_age,
+                    'dimension7': data.brand_type,
+                    'dimension8': data.stock_type,
+                    'dimension9': data.product_rating,
+                    'dimension10': data.number_product_rate,
+                    'dimension11': data.competition_position,
+                    'dimension12': data.product_margin,
+                    'dimension13': data.product_color,
+                }]
+            }
+        }
+    });
+}
+
+/**
+ * Fonction permettant d'envoyer les FunnelDimensions
+ * @param step {Int}
+ * @param datas {Array<Object>}
+ */
+function dataLayerFunnelDimensions(step,stepName,datas) {
+
+    var datasRow = _.chunk(datas,20);
+
+    datasRow.forEach(function (datas) {
+
+        dataLayer.push({
+            'event': 'checkout',
+            'step': step,
+            'stepName': stepName,
+            'ecommerce': {
+                'checkout': {
+                    'actionField': {'step': step},
+                    'products': datas
+                }
+            },
+        });
+    });
+
+}
+
+//Fonction permettant de push une Transaction
+function dataLayerTransaction(dataDimensions,actionField,products) {
+
+    var row = _.chunk(products,20);
+
+    row.forEach(function (products) {
+
+        dataLayer.push({
+            'event': 'EETransaction',
+            'payment_option': dataDimensions.payment_option,
+            'order_shipping_method': dataDimensions.order_shipping_method,
+            'order_status': dataDimensions.order_status,
+            'order_discount_ati': dataDimensions.order_discount_ati,
+            'revenue_tf_without_sf': dataDimensions.revenue_tf_without_sf,
+            'ecommerce': {
+                'currencyCode': 'EUR',
+                'purchase': {
+                    'actionField': actionField,
+                    'products': products
+                }
+            }
+        });
+
+    });
+}
+
+//fonction permettant d'envoyer en événement global a partir d'un element html
+function dataLayerSendEventObj(obj) {
+
+    // var dataga1 = obj.attr('data-ga1');
+    // var dataga2 = obj.attr('data-ga2');
+    // var dataga3 = obj.attr('data-ga3');
+    //
+    // if ((dataga1 != '') && (dataga1 != 'undefined') && (dataga2 != '') && (dataga2 != 'undefined') && (dataga3 != '') && (dataga3 != 'undefined')) {
+    //
+    //     dataLayer.push({
+    //         event: 'GlobalEvent',
+    //         categorie: dataga1,
+    //         action: dataga2,
+    //         libelle: dataga3,
+    //     });
+    //
+    // }
+}
+
+
+//fonction permettant d'envoyer un événement personnalisé
+function dataLayerSendEvent(data) {
+
+    dataLayer.push({
+        event: data.event,
+        categorie: data.categorie,
+        action: data.action,
+        libelle: data.libelle,
+        value: data.value
+    });
+
+}
+
+//Fonction permettant d'envoyer une page a google analytics
+function dataLayerPageView(data) {
+
+    // dataLayer.push({
+    //    event: data.event,
+    //    virtualPageUrl: data.url
+    // });
+
+}
+
+//Fonction permettant de set le referrer
+function dataLayerReferrer(data) {
+
+    // dataLayer.push({
+    //     referrer: data.referrer
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Ancien nouveau client
+function dataLayerDOldNewCustomer(oldNewCustomer) {
+
+        // dataLayer.push({
+        //     event: 'DimensionOldNewCustomer',
+        //     'OldNewCustomer': oldNewCustomer,
+        // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Code Promo
+function dataLayerDCodePromo(codePromo) {
+
+    // dataLayer.push({
+    //     event: 'DimensionCodePromo',
+    //     'codePromo': codePromo,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Livraison
+function dataLayerDShip(ship) {
+
+    // dataLayer.push({
+    //     event: 'DimensionShip',
+    //     'ship': ship,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Paiement
+function dataLayerDPayment(payment) {
+
+    // dataLayer.push({
+    //     event: 'DimensionPayment',
+    //     'payment': payment,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Liste naissance
+function dataLayerDBirthList(birthlist) {
+
+    // dataLayer.push({
+    //     event: 'DimensionBirthList',
+    //     'birthlist': birthlist,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Disponibilité
+function dataLayerDDispo(dispo) {
+
+    // dataLayer.push({
+    //     event: 'DimensionDispo',
+    //     'dispo': dispo,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Disponibilité
+function dataLayerDOffre(offre) {
+
+    // dataLayer.push({
+    //     event: 'DimensionOffre',
+    //     'offre': offre,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Marque
+function dataLayerDMarque(marque) {
+
+    // dataLayer.push({
+    //     event: 'DimensionMarque',
+    //     'marque': marque,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Famille
+function dataLayerDFamille(famille) {
+
+    // dataLayer.push({
+    //     event: 'DimensionFamille',
+    //     'famille': famille,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Disponibilité
+function dataLayerDSousFamille(sousFamille) {
+
+    // dataLayer.push({
+    //     event: 'DimensionSousFamille',
+    //     'sousFamille': sousFamille,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Critere
+function dataLayerCritere(critere) {
+
+    // dataLayer.push({
+    //     event: "DimensionCritere",
+    //     'critere': critere,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Critere
+function dataLayerDGamme(gamme) {
+
+    // dataLayer.push({
+    //     event: 'DimensionGamme',
+    //     'gamme': gamme,
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Rubrique niveau 1 (portail)
+function dataLayerDEditorial1(editorial1) {
+
+    // dataLayer.push({
+    //     event: 'DimensionEditorial1',
+    //    'editorial1': editorial1
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Rubrique niveau 2 (portail)
+function dataLayerDEditorial2(editorial2) {
+
+    // dataLayer.push({
+    //     event: 'DimensionEditorial2',
+    //     'editorial2': editorial2
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Rubrique niveau 3 (portail)
+function dataLayerDEditorial3(editorial3) {
+
+    // dataLayer.push({
+    //     event: 'DimensionEditorial3',
+    //     'editorial3': editorial3
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Rubrique niveau 4 (portail)
+function dataLayerDEditorial4(editorial4) {
+
+    // dataLayer.push({
+    //     event: 'DimensionEditorial4',
+    //     'editorial4': editorial4
+    // });
+
+}
+
+//Fonction permettant d'envoyer la dimension Rubrique niveau 5 (portail)
+function dataLayerDEditorial5(editorial5) {
+
+    // dataLayer.push({
+    //     event: 'DimensionEditorial5',
+    //     'editorial5': editorial5
+    // });
+
+}
+
+
+var datas = [];
+
+//Fonction commentée permettant de vérifier facilement le fonctionnement des différentes fonctions
+
+window.addEventListener("DOMContentLoaded", function () {
+
+    var body = document.querySelector('body');
+    
+    body.addEventListener('click',function (e) {
+
+        //Test de surcharge
+        // for (var i = 0;i <25;i++) {
+        //     datas.push({
+        //         'id': '189193',
+        //         'name': 'PACK POUSSETTE DUO BALIOS S AVEC ATON M IBLACK/URBAN BLACK',
+        //         'category': 'POUSSETTE|PACK POUSSETTE',
+        //         'brand': 'cybex',
+        //         'variant': 'WIP',
+        //         'price': '565.00',
+        //         'dimension4': 'En stock',
+        //         'dimension5': 'Livraison immediate',
+        //         'dimension6': '-1 Mois',
+        //         'dimension7': 'haut de gamme',
+        //         'dimension8': 'Surstock',
+        //         'dimension9': '11',
+        //         'dimension10': '3.2',
+        //         'dimension11': '2',
+        //         'dimension12': '5',
+        //         'dimension13': 'noir',
+        //         'quantity': 1,
+        //     });
+        // }
+
+        // dataLayerUserDimensions({
+        //     user_id: 1,
+        //     user_logged: 'loggé',
+        //     user_status: 'Customer',
+        //     user_email_optin: true
+        // });
+        //
+
+
+        // dataLayerProductDimensions([
+        //         {
+        //             brand: "Beaba",
+        //             category: "Poussette",
+        //             dimension4: "En stock",
+        //             dimension5: "Expédié sous 8 semaines",
+        //             dimension6: "nr",
+        //             dimension7: "neutre",
+        //             dimension8: "nr",
+        //             dimension9: "4.8",
+        //             dimension10: "90",
+        //             dimension11: "2",
+        //             dimension12: "5",
+        //             dimension13: "Bleu",
+        //             id: "BB045240199",
+        //             list: "Poussette",
+        //             name: "Sac à langer genève 2 play print blue",
+        //             position: 3,
+        //             price: 65.90004,
+        //             quantity: 9,
+        //             variant: "false",
+        //     },
+        //     {
+        //         brand: "Bebe confort",
+        //         category: "Poussette",
+        //         dimension4: "En stock",
+        //         dimension5: "Livraison immédiate",
+        //         dimension6: "nr",
+        //         dimension7: "neutre",
+        //         dimension8: "nr",
+        //         dimension9: "0",
+        //         dimension10: "0",
+        //         dimension11: "2",
+        //         dimension12: "5",
+        //         dimension13: "Noir",
+        //         id: "BC031282845",
+        //         list: "Poussette",
+        //         name: "Chancelière baby cocoon nomad black",
+        //         position: 1,
+        //         price: 65.00004,
+        //         quantity: 497,
+        //         variant: "false",
+        //     }
+        // ]);
+
+
+
+        // dataLayerFunnelDimensions({
+        //     id: 7,
+        //     tax: 'tax test',
+        //     coupon: 'coupon test',
+        //     currency_code: 'currency test',
+        //     affiliation: 'affiliation test',
+        //     step: 2,
+        //     revenue: 'test revenue',
+        //     payment_option: 'test payment',
+        //     order_discount_ati: 'test order discount ati',
+        //     revenue_tf_whithout_sf: 'test revenue tf',
+        //     order_shipping_method: 'test shipping method'
+        // });
+
+
+        // dataLayerClickProduct({
+        //     id: 85,
+        //     name: 'test name',
+        //     category: 'test category',
+        //     brand: 'test brand',
+        //     variant: 'test variant',
+        //     price: 32,
+        //     position: 1,
+        //     list: 'test list 85',
+        //     disponibility: 'test dispo',
+        //     delivery_time: 'test delivery_time',
+        //     product_age: 'test product age',
+        //     brand_type: 'test brand type',
+        //     stock_type: 'test stock type',
+        //     product_rating: 'test product rating',
+        //     number_product_rate: 'test number product rate',
+        //     competition_position: 'test competition position',
+        //     product_margin: 'test product margin',
+        //     product_color: 'test product color'
+        // });
+
+        // dataLayerProductDetail({
+        //     id: 'ProductDetail id',
+        //     name: 'ProductDetail name',
+        //     category: 'ProductDetail category',
+        //     brand: 'ProductDetail brand',
+        //     variant: 'ProductDetail variant',
+        //     price: 'ProductDetail price',
+        //     stock: 'ProductDetail stock',
+        //     delivery_time: 'ProductDetail delivery_time',
+        //     product_age: 'ProductDetail product_age',
+        //     brand_type: 'ProductDetail brand_type',
+        //     stock_type: 'ProductDetail stock_type',
+        //     product_rating: 'ProductDetail product_rating',
+        //     number_product_rate: 'ProductDetail number_product_rate',
+        //     competition_position: 'ProductDetail competition_position',
+        //     product_margin: 'ProductDetail product_margin',
+        //     product_color: 'ProductDetail product_color',
+        // });
+
+        // dataLayerSearchDimensions({
+        //     search_keywords: 'Test Keywords',
+        //     search_page_number: 15,
+        //     search_results_number: 23
+        // });
+
+
+        // dataLayerAddToCart({
+        //     id: 'test id',
+        //     name: 'test name',
+        //     category: 'test category',
+        //     brand: 'test brand',
+        //     variant: 'test variant',
+        //     price: 15,
+        //     quantity: 3,
+        //     stock: 'test stock',
+        //     delivery_time: 'test delivery time',
+        //     product_age: 'test product_age',
+        //     brand_type: 'test brand_type',
+        //     stock_type: 'test stock_type',
+        //     product_rating: 'test product_rating',
+        //     number_product_rate: 'test number_product_rate',
+        //     competition_position: 'test competition_position',
+        //     product_margin: 'test product_margin',
+        //     product_color: 'test product_color',
+        // });
+
+        // dataLayerRemoveFromCart({
+        //     id: 'test id',
+        //     name: 'test name',
+        //     category: 'test category',
+        //     brand: 'test brand',
+        //     variant: 'test variant',
+        //     price: 15,
+        //     quantity: 3,
+        //     stock: 'test stock',
+        //     delivery_time: 'test delivery time',
+        //     product_age: 'test product_age',
+        //     brand_type: 'test brand_type',
+        //     stock_type: 'test stock_type',
+        //     product_rating: 'test product_rating',
+        //     number_product_rate: 'test number_product_rate',
+        //     competition_position: 'test competition_position',
+        //     product_margin: 'test product_margin',
+        //     product_color: 'test product_color',
+        // });
+
+
+        //dataLayerFunnelDimensions(1,datas);
+
+        //dataLayerTransaction();
+
+        // dataLayerPromotionsDimensions([
+        //     {
+        //         'id': 'BBD',
+        //         'name': 'BABY DAYS',
+        //         'creative': 'banner1',
+        //         'position': '1'
+        //     },
+        //     {
+        //         'id': 'LB1',
+        //         'name': 'Nouveaute CHICCO',
+        //         'creative': 'banner2',
+        //         'position': '2'
+        //     }]
+        // );
+
+        // dataLayerClickPromotion({
+        //         'id': 'MLA',
+        //         'name': 'Mon Look Automne',
+        //         'creative': 'banner1',
+        //         'position': '1'
+        //     }
+        // );
+
+        // dataLayerContentDimensions({
+        //     pageCategory: 'Test pageCategory',
+        //     page_cat1: 'Test page_cat1',
+        //     page_cat2: 'Test page_cat2',
+        //     page_cat3: 'Test page_cat3',
+        //     page_env: 'stagging',
+        //     page_error: '404'
+        // });
+
+        // dataLayerTransaction({"payment_option":"CB","order_shipping_method":"mondialrelay","order_status":"validated","order_discount_ati":0,"revenue_tf_without_sf":13.016586666667},{"id":"ABE2089730","shipping":"4.9","revenue":17.09992,"affiliation":"Direct","tax":2.8499866666667,"coupon":""},[{"id":"EU061107319","name":"Anneau de dentition r\u00e9frig\u00e9rant vert","category":"\u00c9veil et jouet | Anneau de dentition","coupon":"neutre","brand":"Mam","variant":"false","price":7.29996,"quantity":"1","dispo":"En stock","delivery_time":"Livraison imm\u00e9diate","age_product":null,"brand_type_product":"neutre","stock_type":"nr","nbNotes":11,"rating_product":4.7,"competitionPosition-product":2,"product_margin":"6","product_color":"Vert"},{"id":"EU061107371","name":"Mini anneau de dentition phase 2 + boite de st\u00e9rilisation vert","category":"\u00c9veil et jouet | Anneau de dentition","coupon":"neutre","brand":"Mam","variant":"false","price":4.89996,"quantity":"1","dispo":"En stock","delivery_time":"Livraison imm\u00e9diate","age_product":null,"brand_type_product":"neutre","stock_type":"nr","nbNotes":5,"rating_product":4.2,"competitionPosition-product":2,"product_margin":"6","product_color":"Vert"}]);
+    });
+
+});

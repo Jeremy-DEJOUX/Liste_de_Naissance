@@ -9,6 +9,7 @@ body{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     margin: 0px;
 }
 
@@ -18,9 +19,23 @@ header{
     margin: 0px;
 }
 
-td{
-    border: 1px solid black;
+
+
+                /* TABLEAU */
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 table{
     border-collapse: collapse;
+    width: 75%;
+}
+td{
+    border: 1px solid black;
+}
+.img1{
+    width: 100px;
+    opacity: 0.9
 }

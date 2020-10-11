@@ -1,0 +1,165 @@
+/* Forçage UTF-8 */
+
+/* RENSEIGNER ICI LA RUBRIQUE (CF PHP) */
+rubrique = 'CRYPTEDLINK';
+
+function hexdec(hex_string) {
+	hex_string = (hex_string+'').replace(/[^a-f0-9]/gi, '');
+	return parseInt(hex_string, 16);
+}
+
+function chr(AsciiNum) {
+	return String.fromCharCode(AsciiNum);
+}
+
+function hex2bin(hex) {
+	var r = '';
+	var a=0;
+	for (a=0; a<hex.length; a=a+2) {
+		r = r + chr(hexdec(hex.slice(a,a+2)));
+	}
+	return r;
+}
+
+var Utf8 = {
+ 
+	// public method for url encoding
+	encode : function (string) {
+		string = string.replace(/\r\n/g,"\n");
+		var utftext = "";
+ 
+		for (var n = 0; n < string.length; n++) {
+ 
+			var c = string.charCodeAt(n);
+ 
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			}
+			else if((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+			else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+ 
+		}
+ 
+		return utftext;
+	},
+ 
+	// public method for url decoding
+	decode : function (utftext) {
+		var string = "";
+		var i = 0;
+		var c = c1 = c2 = 0;
+ 
+		while ( i < utftext.length ) {
+ 
+			c = utftext.charCodeAt(i);
+ 
+			if (c < 128) {
+				string += String.fromCharCode(c);
+				i++;
+			}
+			else if((c > 191) && (c < 224)) {
+				c2 = utftext.charCodeAt(i+1);
+				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+				i += 2;
+			}
+			else {
+				c2 = utftext.charCodeAt(i+1);
+				c3 = utftext.charCodeAt(i+2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+			}
+ 
+		}
+ 
+		return string;
+	}
+ 
+};
+
+function htmlEntities(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function processLinks() {
+	var classList, deb, lnk, cryptedLink, classes, obj, blank, id, txt, top, style, onclick;
+	$("span[class*=" + rubrique + "]").each(function() {
+		classList = $(this).attr('class').split(/\s+/);
+		obj = $(this);
+		lnk = "";
+		classes = "";
+		blank = 0;
+		top = 0;
+		$.each( classList, function(index, item) {
+			deb = item.indexOf(rubrique);
+			if (deb > -1) {
+				deb += rubrique.length;
+				cryptedLink = item.substr(deb,item.length);
+				lnk = "<a href=\"" + hex2bin(cryptedLink) + "\"";
+			} else {
+				if (item == "blank") {
+          blank = 1;
+				} else {
+          if (item == 'top') {
+            top = 1;
+          } else {
+            classes += ((classes.length) ? " " : "") + item;
+          }
+        }
+			}
+		});
+		if (lnk.length) {
+      lnk += " class=\"noseo" + ((classes.length) ? (' ' + classes) : '') + "\"";
+			if (classes.length) {
+        lnk += " class=\"" + classes + "\"";
+			}
+			if (blank) {
+        lnk += " target=\"_blank\"";
+			} else {
+        if (top) {
+          lnk += " target=\"_top\"";
+        }
+      }
+      var i = 0;
+      var val = '';
+      $.each(obj[0].attributes, function() {
+        if (this.specified) {
+          val = htmlEntities(this.value);
+          lnk += ' ' + this.name + '="' + val + '"';
+        }
+      });
+			lnk += ">" + obj.html() + "</a>";
+			obj.replaceWith(lnk);
+		}
+	});
+  $("div[class*=" + rubrique + "]").each(function() {
+		classList = $(this).attr('class').split(/\s+/);
+		var obj = $(this);
+		var txt = '';
+    var classes = '';
+		$.each( classList, function(index, item) {
+			deb = item.indexOf(rubrique);
+			if(deb > -1) {
+				deb += rubrique.length;
+				cryptedLink = item.substr(deb,item.length);
+				txt = hex2bin(cryptedLink) ;
+			} else {
+        classes += ((classes.length) ? " " : "") + item;
+      }
+		});
+    obj.attr('class', classes);
+		if(txt.length) {
+			obj.html(Utf8.decode(txt));
+		} 
+	});
+}
+
+$(function() {
+	processLinks();
+});
