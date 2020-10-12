@@ -28,9 +28,39 @@ main{
     justify-content: center;
     align-items: center;
 }
+
+
+                    /*Page Liste*/
+.Listebaby{
+    background-color: rgb(190, 235, 233);
+}
+.COLORS{
+    display: flex;
+}
+.CC2{
+    display: flex;
+    background-color: black;
+}
+.RED{
+    color: red;
+    margin: 10px;
+}
+.GREEN{
+    color: green;
+    margin: 10px;
+}
+.YELLOW{
+    color: yellow;
+    margin: 10px;
+}
+.BLUE{
+    color: blue;
+    margin: 10px;
+}
 table{
     border-collapse: collapse;
     width: 75%;
+    
 }
 td{
     border: 1px solid black;
@@ -38,4 +68,50 @@ td{
 .img1{
     width: 100px;
     opacity: 0.9
+}
+
+/* PAGE FORMULAIRE */
+.Formulaire1{
+    background: url(Images/baby_back.jpg)no-repeat;
+    background-size: cover;
+}
+.Form1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 224, 224, 0.4);
+}
+.Name{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;;
+}
+.Image{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;;
+}
+.Categorie{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+.Descriptiontxt{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+.Descriptiontxt textarea{
+    resize: none;
+}
+.URL{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
 }

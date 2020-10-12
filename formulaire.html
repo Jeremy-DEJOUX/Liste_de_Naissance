@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="liste.css">
+    <title>Ajout d'Objets</title>
+</head>
+<body class="Formulaire1">
+    <header>
+
+    </header>
+
+    <main>
+        <form action="" method="POST" class="Form1">
+            <div class="Name">
+                <label for="name">Nom :</label>
+                <input type="text" id="name" name="user_name">
+            </div>
+            <div class="Image">
+                <label for="Logo">Image :</label>
+                <input type="text" id="Logo" name="Logo">
+            </div>
+            <div class="Categorie">
+                <label for="Categorie">Catégorie :</label>
+                <select>                    
+                    <optgroup label="Categorie">
+                        <option>Pour les Sorties</option>
+                        <option>Eveil de l'enfant</option>
+                        <option>Repas</option>
+                        <option>Chambre</option>
+                        <option>Hygiène/Toilettes</option>
+                        <option>Habits</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="Descriptiontxt">
+                <label for="Description">Description</label>
+                <textarea name="Descritpion" id="Descritpion" cols="50" rows="8"></textarea>
+            </div>
+            <div class="URL">
+                <label for="Sites">URL site de ventes :</label>
+                <input type="text" id="Sites" name="Sites">
+            </div>
+            <a href="liste.html"><input type="button" value="Envoyer"></a>
+        </form>
+    </main>
+
+    <footer>
+
+    </footer>
+</body>
+</html>
