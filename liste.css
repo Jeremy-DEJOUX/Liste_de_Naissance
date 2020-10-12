@@ -11,12 +11,13 @@ body{
     justify-content: space-between;
     align-items: center;
     margin: 0px;
+    font-family: 'Josefin Sans', cursive;
+
 }
 
                     /* HEADER */
 header{
-    background-color: yellow;
-    margin: 0px;
+    margin:20px;
 }
 
 
@@ -34,40 +35,70 @@ main{
 .Listebaby{
     background-color: rgb(190, 235, 233);
 }
-.COLORS{
-    display: flex;
+
+.CODE li{
+    display: inline;
+    margin: 20px;
+    border: 1px solid black;
+    padding: 20px;
 }
-.CC2{
-    display: flex;
-    background-color: black;
+
+.URGENT{
+    background-color: red;
+    animation: click 1.5s infinite;
 }
-.RED{
-    color: red;
-    margin: 10px;
+
+@keyframes click{
+    0%{background-color: red;}
+    50%{background-color: rgb(190, 235, 233);}
+    100%{background-color: red;}
 }
-.GREEN{
-    color: green;
-    margin: 10px;
+.BUY{
+    text-decoration: line-through;
+    background-color: #f6eec7;
 }
-.YELLOW{
-    color: yellow;
-    margin: 10px;
+.FRIEND{
+    background-color: greenyellow;
+    font-weight: bold;
 }
-.BLUE{
-    color: blue;
-    margin: 10px;
+.NORMAL{
+
 }
-table{
+.GRANDE_LISTE{
     border-collapse: collapse;
     width: 75%;
-    
+    margin: 0px;
+}
+thead{
+    font-size: 20px;
+    text-decoration: underline;
+    color: rgb(255, 182, 185);
+}
+tfoot{
+    font-size: 20px;
+    text-decoration: underline;
+    color: rgb(255, 182, 185);
+}
+tr{
+    margin: 0px;
 }
 td{
     border: 1px solid black;
+    padding: 0px;
+    text-align: center;
+    padding: 20px;
 }
 .img1{
-    width: 100px;
-    opacity: 0.9
+    width: 200px;
+    margin: 0px;
+    background-color: white;
+}
+table a{
+    border: 1px solid black;
+    padding: 10px;;
+}
+table a:hover{
+    background-color: rgb(255, 182, 185);
 }
 
 /* PAGE FORMULAIRE */
