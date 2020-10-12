@@ -15,33 +15,40 @@ body{
 
 }
 
-                    /* HEADER */
 header{
     margin:20px;
 }
 
-
-
-                /* TABLEAU */
 main{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 }
 
 
                     /*Page Liste*/
+h2{
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+
 .Listebaby{
     background-color: rgb(190, 235, 233);
 }
 
+.CODE{
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
 .CODE li{
     display: inline;
     margin: 20px;
     border: 1px solid black;
     padding: 20px;
 }
+
 
 .URGENT{
     background-color: red;
@@ -53,6 +60,7 @@ main{
     50%{background-color: rgb(190, 235, 233);}
     100%{background-color: red;}
 }
+
 .BUY{
     text-decoration: line-through;
     background-color: #f6eec7;
@@ -67,9 +75,10 @@ main{
 .GRANDE_LISTE{
     border-collapse: collapse;
     width: 75%;
-    margin: 0px;
+    margin-top: 20px;
 }
-thead{
+
+thead {
     font-size: 20px;
     text-decoration: underline;
     color: rgb(255, 182, 185);
@@ -82,17 +91,22 @@ tfoot{
 tr{
     margin: 0px;
 }
+
 td{
     border: 1px solid black;
     padding: 0px;
     text-align: center;
     padding: 20px;
 }
+
 .img1{
     width: 200px;
     margin: 0px;
     background-color: white;
 }
+
+
+
 table a{
     border: 1px solid black;
     padding: 10px;;
@@ -100,6 +114,11 @@ table a{
 table a:hover{
     background-color: rgb(255, 182, 185);
 }
+
+
+
+
+
 
 /* PAGE FORMULAIRE */
 .Formulaire1{

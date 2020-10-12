@@ -12,7 +12,7 @@
     </header>
 
     <main>
-        <form action="" method="POST" class="Form1">
+        <form method="POST" class="Form1">
             <div class="Name">
                 <label for="name">Nom :</label>
                 <input type="text" id="name" name="user_name">
@@ -22,7 +22,7 @@
                 <input type="text" id="Logo" name="Logo">
             </div>
             <div class="Categorie">
-                <label for="Categorie">Catégorie :</label>
+                <label id="Categorie">Catégorie :</label>
                 <select>                    
                     <optgroup label="Categorie">
                         <option>Pour les Sorties</option>
@@ -35,14 +35,14 @@
                 </select>
             </div>
             <div class="Descriptiontxt">
-                <label for="Description">Description</label>
+                <label id="Desc">Description</label>
                 <textarea name="Descritpion" id="Descritpion" cols="50" rows="8"></textarea>
             </div>
             <div class="URL">
                 <label for="Sites">URL site de ventes :</label>
                 <input type="text" id="Sites" name="Sites">
             </div>
-            <a href="liste.html"><input type="button" value="Envoyer"></a>
+            <input type="button" onclick=window.location.href="liste.html" value=Envoyer>
         </form>
     </main>
 
